@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Frame from "react-frame-component";
+
+import "./App.css";
+import { PluginManager } from "./plugin/api/PluginManager";
+import { FormPlugin } from "./plugin/Form.plugin";
 
 function App() {
+  const manager = new PluginManager();
+  manager.loadPlugin(FormPlugin);
+
+  const pluginComponents = manager.getPluginComponents();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        paddingLeft: "20px",
+      }}
+    >
+      <h1>Home Page</h1>
+
+      {pluginComponents.map((plugin, index) => {
+        const Component = plugin.component;
+        const name = plugin.name;
+
+        return (
+          <Frame key={index}>
+            <h2>{name}</h2>
+            <Component />
+          </Frame>
+        );
+      })}
     </div>
   );
 }
